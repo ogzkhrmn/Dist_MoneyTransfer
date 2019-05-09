@@ -28,7 +28,6 @@ public final class HibernateConfiguration {
                 settings.put(Environment.USER, ApplicationProperties.getProperty("db.user"));
                 settings.put(Environment.PASS, ApplicationProperties.getProperty("db.password"));
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
-                settings.put(Environment.HBM2DDL_AUTO, "update");
                 settings.put(Environment.POOL_SIZE, "10");
                 settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
                 settings.put(Environment.DEFAULT_SCHEMA, "public");
