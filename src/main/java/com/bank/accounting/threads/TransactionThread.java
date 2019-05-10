@@ -46,7 +46,6 @@ public class TransactionThread extends Thread {
         this.accountRequest = accountRequest;
         this.error = errorEntity;
         error.setCount(error.getCount() + 1);
-        error.setJson(null);
     }
 
     @Override
