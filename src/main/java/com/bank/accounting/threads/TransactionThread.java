@@ -63,7 +63,7 @@ public class TransactionThread extends Thread {
         if (hasLimit && !getError) {
             if (!error.getErrorSecurity() && !callSecurity().isSuccess()) {
                 callFailMail();
-            } else if (!error.getErrorTcmb() && callTcmb().isSuccess()) {
+            } else if (callTcmb().isSuccess()) {
                 if (error.getCount() != 0) {
                     error.setSuccess(true);
                     accountDao.saveError(error);
@@ -150,7 +150,7 @@ public class TransactionThread extends Thread {
             getError = true;
         }
         ResponseModel responseModel = new ResponseModel();
-        responseModel.setSuccess(true);
+        responseModel.setSuccess(false);
         return responseModel;
     }
 
