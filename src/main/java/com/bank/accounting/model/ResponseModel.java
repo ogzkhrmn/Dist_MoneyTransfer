@@ -7,14 +7,13 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ResponseModel implements Serializable {
 
-    public String getField() {
-        return field;
+    private boolean success;
+
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setField(String field) {
-        this.field = field;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
-
-    private String field;
-
 }

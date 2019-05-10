@@ -1,7 +1,7 @@
 package com.bank.accounting.core.handler;
 
 import com.bank.accounting.core.HibernateConfiguration;
-import com.bank.accounting.dao.impl.DenemeDaoImpl;
+import com.bank.accounting.core.annotation.RealTransaction;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -22,8 +22,16 @@ public class DynamicInvocationHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Session session = HibernateConfiguration.getSession().getCurrentSession();
         Transaction transaction = session.beginTransaction();
-        method.invoke(obj, args);
-        transaction.commit();
-        return null;
+        try {
+            if (method.getAnnotationsByType(RealTransaction.class) != null) {
+                Object o = method.invoke(obj, args);
+                transaction.commit();
+                return o;
+            }
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new Exception(e);
+        }
+        return proxy;
     }
 }

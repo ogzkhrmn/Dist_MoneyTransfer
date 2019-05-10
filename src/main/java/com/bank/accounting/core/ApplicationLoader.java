@@ -6,9 +6,6 @@ import com.bank.accounting.core.handler.DynamicInvocationHandler;
 import com.bank.accounting.core.model.AnnotatedFieldModel;
 import com.bank.accounting.core.util.BeanUtil;
 import com.bank.accounting.core.util.PackageScanner;
-import com.bank.accounting.dao.DenemeDao;
-import com.bank.accounting.dao.impl.DenemeDaoImpl;
-import com.bank.accounting.service.MoneyTransferService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.List;
 
 class ApplicationLoader {
@@ -56,19 +54,21 @@ class ApplicationLoader {
     static void addPrxoy() {
         try {
             BeanUtil.getFields().keySet().forEach(item -> {
-                AnnotatedFieldModel annotatedFieldModel = BeanUtil.getField(item);
+                List<AnnotatedFieldModel> annotatedFieldModelList = BeanUtil.getField(item);
                 Class clazz = BeanUtil.getBean(item);
-                try {
-                    Object object = Proxy.newProxyInstance(clazz.getClassLoader(),
-                            new Class[]{annotatedFieldModel.getField().getType()},
-                            new DynamicInvocationHandler(clazz.newInstance()));
-                    annotatedFieldModel.getField().setAccessible(true);
-                    Field f = annotatedFieldModel.getClazz().getDeclaredField(item);
-                    f.setAccessible(true);
-                    f.set(null, object);
-                } catch (Exception e) {
-                    LOGGER.error("Bean creation error", e);
-                }
+                annotatedFieldModelList.forEach(annotatedFieldModel -> {
+                    try {
+                        Object object = Proxy.newProxyInstance(clazz.getClassLoader(),
+                                new Class[]{annotatedFieldModel.getField().getType()},
+                                new DynamicInvocationHandler(clazz.newInstance()));
+                        annotatedFieldModel.getField().setAccessible(true);
+                        Field f = annotatedFieldModel.getClazz().getDeclaredField(item);
+                        f.setAccessible(true);
+                        f.set(null, object);
+                    } catch (Exception e) {
+                        LOGGER.error("Bean creation error", e);
+                    }
+                });
             });
         } catch (Exception e) {
             LOGGER.error("Package Reading problem ", e);

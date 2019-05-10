@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-final class ApplicationProperties {
+public final class ApplicationProperties {
     private static final Properties properties = readProperties();
 
     static Properties readProperties() {
@@ -17,7 +17,7 @@ final class ApplicationProperties {
         }
     }
 
-    static String getProperty(String propertyName){
+    public static String getProperty(String propertyName){
         return properties.getProperty(propertyName);
     }
 
