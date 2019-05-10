@@ -51,7 +51,7 @@ public class TransactionThread extends Thread {
 
     @Override
     public void run() {
-        if(error.getCount() == 0){
+        if (error.getCount() == 0) {
             callSendMail();
         }
         boolean hasLimit = true;
@@ -65,6 +65,10 @@ public class TransactionThread extends Thread {
             if (!error.getErrorSecurity() && !callSecurity().isSuccess()) {
                 callFailMail();
             } else if (!error.getErrorTcmb() && callTcmb().isSuccess()) {
+                if (error.getCount() != 0) {
+                    error.setSuccess(true);
+                    accountDao.saveError(error);
+                }
                 callOkMail();
             } else {
                 error.setErrorTcmb(true);
