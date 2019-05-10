@@ -48,4 +48,14 @@ public class MoneyTransferService {
         return responseModel;
     }
 
+    @POST
+    @Path("/control")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ResponseModel isAlive() {
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setSuccess(true);
+        return responseModel;
+    }
+
 }
