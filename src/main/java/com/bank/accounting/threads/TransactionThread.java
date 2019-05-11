@@ -78,7 +78,7 @@ public class TransactionThread extends Thread {
         if (hasLimit && getError && error.getCount() <= 3) {
             error.setSuccess(false);
             accountDao.saveError(error);
-        } else if (getError) {
+        } else if (getError || !hasLimit) {
             if (error.getCount() == 4) {
                 error.setSuccess(true);
                 accountDao.saveError(error);
