@@ -54,13 +54,13 @@ public class TransactionThread extends Thread {
             callSendMail();
         }
         boolean hasLimit = true;
+        error.setSuccess(true);
         try {
             hasLimit = accountDao.hasUserLimit(accountRequest.getFrom(), accountRequest.getAmount());
         } catch (Exception e) {
             getError = true;
         }
         if (hasLimit && !getError) {
-            error.setSuccess(true);
             if (!error.getErrorSecurity() && !callSecurity().isSuccess()) {
                 callFailMail();
             } else if (callTcmb().isSuccess()) {
