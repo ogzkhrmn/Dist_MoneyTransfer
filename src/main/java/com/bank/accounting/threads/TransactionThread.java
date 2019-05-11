@@ -58,7 +58,6 @@ public class TransactionThread extends Thread {
             hasLimit = accountDao.hasUserLimit(accountRequest.getFrom(), accountRequest.getAmount());
         } catch (Exception e) {
             getError = true;
-            error.setJson(gson.toJson(accountRequest));
         }
         if (hasLimit && !getError) {
             error.setSuccess(true);
@@ -80,6 +79,7 @@ public class TransactionThread extends Thread {
             }
             callFailMail();
         }
+        error.setJson(gson.toJson(accountRequest));
         accountDao.saveError(error);
     }
 
@@ -126,6 +126,7 @@ public class TransactionThread extends Thread {
         } catch (Exception e) {
             LOGGER.error("Transaction error " + accountRequest.getEmail() + " :", e);
             error.setErrorSecurity(true);
+            error.setSuccess(false);
             error.setJson(gson.toJson(accountRequest));
             getError = true;
         }
@@ -141,6 +142,7 @@ public class TransactionThread extends Thread {
         } catch (Exception e) {
             LOGGER.error("Transaction error " + accountRequest.getEmail() + " :", e);
             error.setErrorTcmb(true);
+            error.setSuccess(false);
             error.setJson(gson.toJson(accountRequest));
             getError = true;
         }
