@@ -64,8 +64,8 @@ public class TransactionThread extends Thread {
             if (!error.getErrorSecurity() && !callSecurity().isSuccess()) {
                 callFailMail();
             } else if (callTcmb().isSuccess()) {
+                error.setSuccess(true);
                 if (error.getCount() != 0) {
-                    error.setSuccess(true);
                     accountDao.saveError(error);
                 }
                 callOkMail();

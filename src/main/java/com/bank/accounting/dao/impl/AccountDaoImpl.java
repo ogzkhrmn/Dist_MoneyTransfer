@@ -7,6 +7,8 @@ import com.bank.accounting.dao.AccountDao;
 import com.bank.accounting.entities.Account;
 import com.bank.accounting.entities.ErrorEntity;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -15,6 +17,8 @@ import java.math.BigDecimal;
 
 @ServiceBean("accountDao")
 public class AccountDaoImpl extends AbstractDao implements AccountDao {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountDaoImpl.class);
 
     @RealTransaction
     @Override
@@ -31,7 +35,12 @@ public class AccountDaoImpl extends AbstractDao implements AccountDao {
     @RealTransaction
     @Override
     public void saveError(ErrorEntity errorEntity) {
-        getSessionFactory().saveOrUpdate(errorEntity);
+        try {
+            getSessionFactory().saveOrUpdate(errorEntity);
+        } catch (Exception e) {
+            LOGGER.error("Save transaction error ", e);
+        }
+
     }
 
     @RealTransaction
