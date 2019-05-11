@@ -61,31 +61,26 @@ public class TransactionThread extends Thread {
             error.setJson(gson.toJson(accountRequest));
         }
         if (hasLimit && !getError) {
+            error.setSuccess(true);
             if (!error.getErrorSecurity() && !callSecurity().isSuccess()) {
                 callFailMail();
             } else if (callTcmb().isSuccess()) {
-                error.setSuccess(true);
-                if (error.getCount() != 0) {
-                    accountDao.saveError(error);
-                }
                 callOkMail();
             } else {
-                error.setErrorTcmb(true);
                 error.setJson(gson.toJson(accountRequest));
             }
         }
 
         if (hasLimit && getError && error.getCount() <= 3) {
             error.setSuccess(false);
-            accountDao.saveError(error);
         } else if (getError || !hasLimit) {
             if (error.getCount() == 4) {
                 error.setSuccess(true);
-                accountDao.saveError(error);
                 callSystemError();
             }
             callFailMail();
         }
+        accountDao.saveError(error);
     }
 
     private void callFailMail() {
