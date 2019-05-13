@@ -126,9 +126,7 @@ public class TransactionThread extends Thread {
         } catch (Exception e) {
             LOGGER.error("Transaction error " + accountRequest.getEmail() + " :", e);
             error.setErrorSecurity(true);
-            error.setSuccess(false);
             error.setJson(gson.toJson(accountRequest));
-            getError = true;
         }
         ResponseModel responseModel = new ResponseModel();
         responseModel.setSuccess(true);
